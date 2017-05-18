@@ -1,4 +1,6 @@
 var friends = require("../data/friends");
+var path = require("path");
+var fs = require("fs");
 
 module.exports = function(app) {
 
@@ -10,29 +12,31 @@ module.exports = function(app) {
         // Code to find best match
 
         // Initialize array to hold comparison results
-        var diffCalculate = [];
+        var smallest = 100;
+        var bestFriend;
 
+        //For loop through each friend in friends
         for (var i = 0; i < friends.length; i++) {
+            // Array to total the differences in scores for potential matches
+            var compArray = [];
 
+            for (var j = 0; j < friends[i].scores.length; j++) {
+                compArray.push(Math.abs(friends[i].scores[j] - req.body.scores[j]));
+
+            }
+            var matchScore = compArray.reduce((a, b) => a + b, 0);
+
+            if (matchScore < smallest) {
+                smallest = matchScore;
+                bestFriend = friends[i];
+            }
         }
 
-        // Find the min value of comparison scores
-        var min_of_array = Math.min.apply(Math, diffCalculate);
-        console.log(diffCalculate);
+        // Return best match to client
+        res.json(bestFriend);
 
         // Add current user to friendsArray
         friends.push(req.body);
-
-        // Return best match to client
-        res.json(friends[diffCalculate.indexOf(min_of_array)]);
     });
-}
 
-function arraySubtract(i) {
-    var tempNum;
-    for (var j = 0; j < friends[i].scores; j++) {
-        tempNum = tempNum + Math.abs(friends[i].scores[j] - req.body.scores[j]);
-        console.log(friends[i].name + " diff is " + diffCalculate[i]);
-    }
-    return tempNum;
 }
