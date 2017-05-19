@@ -1,6 +1,6 @@
 var friends = require("../data/friends");
 var path = require("path");
-var fs = require("fs");
+
 
 module.exports = function(app) {
 
@@ -12,7 +12,7 @@ module.exports = function(app) {
         // Code to find best match
 
         // Initialize array to hold comparison results
-        var smallest = 100;
+        var smallest = 10000000;
         var bestFriend;
 
         //For loop through each friend in friends
